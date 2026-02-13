@@ -33,7 +33,7 @@ RUN sh /uv-installer.sh && rm /uv-installer.sh
 ENV PATH="/root/.local/bin/:$PATH"
 
 # Airflow environment variables
-ENV AIRFLOW_HOME=/home/airflow/airflow
+ENV AIRFLOW_HOME=/home/airflow
 ENV AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=true
 ENV AIRFLOW__CORE__LOAD_EXAMPLES=false
 ENV AIRFLOW__CORE__FERNET_KEY=''
@@ -50,12 +50,14 @@ RUN uv pip install "apache-airflow==${AIRFLOW_VERSION}" --constraint "${CONSTRAI
 RUN uv pip install pyspark 'pyspark[sql]'
 RUN uv pip install ruff
 RUN uv pip install jupyterlab
-RUN uv pip install dbt
+RUN uv pip install dbt dbt-core dbt-spark[session]
 RUN uv pip install duckdb
 
 # Copy IPython startup scripts
 COPY ./ipython_scripts/startup/ /root/.ipython/profile_default/startup/
 
+COPY ./generate_data.py /home/airflow/
+COPY ./run_ddl.py /home/airflow/
 # mkdir warehouse and spark-events folder 
 RUN mkdir -p /home/airflow/warehouse
 RUN mkdir -p /home/airflow/spark-events

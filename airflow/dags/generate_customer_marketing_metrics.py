@@ -21,10 +21,6 @@ default_args = {
     tags=["marketing", "analytics", "dbt"],
 )
 def generate_customer_marketing_metrics():
-    extract_data = BashOperator(
-        task_id="extract_data",
-        bash_command="cd $AIRFLOW_HOME && python3 generate_data.py && python3 run_ddl.py",
-    )
 
     transform_data = BashOperator(
         task_id="dbt_run",
@@ -41,7 +37,7 @@ def generate_customer_marketing_metrics():
         bash_command="cd $AIRFLOW_HOME && python3 /opt/airflow/tpch_analytics/dashboard.py",
     )
 
-    extract_data >> transform_data >> generate_docs >> generate_dashboard
+    transform_data >> generate_docs >> generate_dashboard
 
 
 generate_customer_marketing_metrics()

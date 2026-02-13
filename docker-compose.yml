@@ -12,7 +12,7 @@ services:
       - "4040:4040"   # Spark UI
       - "8888:8888"   # Jupyter Lab
     volumes:
-      - ./airflow/dags:/home/airflow/airflow/dags
-      - ./airflow/tpch_analytics:/home/airflow/airflow/tpch_analytics
+      - ./airflow/dags:/home/airflow/dags
+      - ./airflow/tpch_analytics:/home/airflow/tpch_analytics
       - ./notebooks:/home/airflow/notebooks
       - ./README.md:/home/airflow/README.md
