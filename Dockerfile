@@ -54,7 +54,7 @@ RUN uv pip install dbt
 RUN uv pip install duckdb
 
 # Copy IPython startup scripts
-COPY ./ipython/profile_default/startup/ /root/.ipython/profile_default/startup/
+COPY ./ipython_scripts/startup/ /root/.ipython/profile_default/startup/
 
 # mkdir warehouse and spark-events folder 
 RUN mkdir -p /home/airflow/warehouse

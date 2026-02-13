@@ -1,15 +1,26 @@
 from datetime import datetime, timedelta
-from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
+from airflow.decorators import dag
+from airflow.operators.bash import BashOperator
 
-with DAG(
-    "generate_customer_marketing_metrics",
+default_args = {
+    "owner": "airflow",
+    "depends_on_past": False,
+    "retries": 1,
+    "retry_delay": timedelta(minutes=5),
+}
+
+
+@dag(
+    dag_id="generate_customer_marketing_metrics",
     description="A DAG to extract data, load into db and generate customer marketing metrics",
-    schedule_interval=timedelta(days=1),
+    schedule="@daily",  # More explicit than timedelta(days=1)
     start_date=datetime(2023, 1, 1),
     catchup=False,
     max_active_runs=1,
-) as dag:
+    default_args=default_args,
+    tags=["marketing", "analytics", "dbt"],
+)
+def generate_customer_marketing_metrics():
     extract_data = BashOperator(
         task_id="extract_data",
         bash_command="cd $AIRFLOW_HOME && python3 generate_data.py && python3 run_ddl.py",
@@ -31,3 +42,7 @@ with DAG(
     )
 
     extract_data >> transform_data >> generate_docs >> generate_dashboard
+
+
+generate_customer_marketing_metrics()
+
