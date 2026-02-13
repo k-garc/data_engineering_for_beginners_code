@@ -52,6 +52,7 @@ RUN uv pip install ruff
 RUN uv pip install jupyterlab
 RUN uv pip install dbt dbt-core dbt-spark[session]
 RUN uv pip install duckdb
+RUN uv pip install plotly
 
 # Copy IPython startup scripts
 COPY ./ipython_scripts/startup/ /root/.ipython/profile_default/startup/
